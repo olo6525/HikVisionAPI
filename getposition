@@ -1,0 +1,30 @@
+//C++ Code of HikVision API what I made..
+
+if (!NET_DVR_GetDVRConfig(m_lUserID, NET_DVR_GET_PTZPOS, HIKVISION_CHANNEL, &stPos, sizeof(stPos), &dwLen))
+			{
+				TRACE("NET_DVR_GetDVRConfig FAILED [%d]\r\n ", NET_DVR_GetLastError());
+				return DWPTZ::RET_CODE::E_INVALID_PARAM;
+			}
+			else
+			{
+				*cmd1 = stPos.wPanPos;
+				*cmd2 = stPos.wTiltPos;
+				*cmd3 = stPos.wZoomPos;
+			
+				TRACE("GetPos : PAN[%d],Tilt[%d],Zoom[%d],Focus[%d] \n", *cmd1, *cmd2, *cmd3, (cmd4 == NULL ? 0 : *cmd4));			
+
+				return DWPTZ::RET_CODE::E_SUCCESS;
+			}
+      
+  
+// Hik Vision get the position as hexadecimal system ex) 0x2384 -> 238.4˚ 
+//So If you want get position decimal, you need to change this number using string....
+//Because hexadecimal and decimal all have same meaning, they are expressed same numbeer in 'int'...
+//So we need to use CString to change Hexadecimal's expression to  decimal's expression
+// Like this
+
+        CString calc;
+				calc.Format(_T("%d"), newPan / 10);
+				cal_newPan = (int)strtol(calc, NULL, 16);
+				calc.Format(_T("%d"), newTilt / 10);
+				cal_newTilt = (int)strtol(calc, NULL, 16);
